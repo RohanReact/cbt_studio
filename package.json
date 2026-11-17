@@ -1,0 +1,42 @@
+{
+  "name": "cbt-studio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Turn any exam question paper PDF into a real computer-based test, with accounts, saved papers and plans.",
+  "type": "module",
+  "scripts": {
+    "postinstall": "node scripts/copy-pdfjs-assets.mjs",
+    "predev": "node scripts/copy-pdfjs-assets.mjs",
+    "dev": "node scripts/dev.mjs",
+    "server": "node --watch server/index.ts",
+    "prebuild": "node scripts/copy-pdfjs-assets.mjs",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "start": "node server/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run && node --test server/plans.test.ts",
+    "samples": "node scripts/make-samples.mjs"
+  },
+  "dependencies": {
+    "idb": "^8.0.4",
+    "lucide-react": "^1.73.0",
+    "pdfjs-dist": "^6.5.438",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router-dom": "^7.18.5",
+    "tesseract.js": "^7.0.0",
+    "zustand": "^5.1.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.5",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "pdf-lib": "^1.17.1",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0"
+  }
+}

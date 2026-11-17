@@ -1,0 +1,97 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --color-ion-blue: #1f4e8c;
+  --color-ion-sky: #2f7fd1;
+  --color-ion-answered: #3ca13c;
+  --color-ion-notanswered: #e5482d;
+  --color-ion-marked: #6b3fa0;
+  --color-ion-notvisited: #e2e4e8;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-slate-50 text-slate-800 antialiased;
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-3.5 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50;
+}
+.btn-primary {
+  @apply btn bg-indigo-600 text-white shadow-sm hover:bg-indigo-700;
+}
+.btn-secondary {
+  @apply btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50;
+}
+.btn-danger {
+  @apply btn border border-red-200 bg-white text-red-600 hover:bg-red-50;
+}
+.btn-ghost {
+  @apply btn text-slate-600 hover:bg-slate-100;
+}
+.input {
+  @apply rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100;
+}
+.card {
+  @apply rounded-xl border border-slate-200 bg-white shadow-sm;
+}
+.label {
+  @apply mb-1 block text-xs font-medium tracking-wide text-slate-500 uppercase;
+}
+
+/* Question palette badges, shaped like the TCS iON exam interface. */
+.qbadge {
+  @apply relative inline-flex h-10 w-11 items-center justify-center text-sm font-semibold select-none;
+}
+.qbadge-notVisited {
+  @apply rounded-md border border-slate-300 bg-ion-notvisited text-slate-700;
+}
+.qbadge-notAnswered {
+  @apply bg-ion-notanswered text-white;
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
+  border-radius: 6px 6px 0 0;
+}
+.qbadge-answered {
+  @apply bg-ion-answered text-white;
+  clip-path: polygon(50% 0, 100% 30%, 100% 100%, 0 100%, 0 30%);
+  border-radius: 0 0 6px 6px;
+}
+.qbadge-marked {
+  @apply rounded-full bg-ion-marked text-white;
+  width: 2.5rem;
+}
+.qbadge-answeredMarked {
+  @apply rounded-full bg-ion-marked text-white;
+  width: 2.5rem;
+}
+.qbadge-answeredMarked::after {
+  content: '';
+  @apply absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-ion-answered;
+}
+.qbadge-current {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
+}
+
+.snippet-img {
+  image-rendering: auto;
+}
+
+@keyframes pulse-red {
+  0%,
+  100% {
+    color: #fff;
+  }
+  50% {
+    color: #fecaca;
+  }
+}
+.timer-low {
+  animation: pulse-red 1s infinite;
+}
