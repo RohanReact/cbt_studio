@@ -4,6 +4,9 @@
   "private": true,
   "description": "Turn any exam question paper PDF into a real computer-based test, with accounts, saved papers and plans.",
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "postinstall": "node scripts/copy-pdfjs-assets.mjs",
     "predev": "node scripts/copy-pdfjs-assets.mjs",

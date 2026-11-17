@@ -40,7 +40,8 @@ loadEnv();
 sweepSessions();
 
 const PORT = Number(process.env.PORT || 8787);
-const HOST = process.env.HOST || '127.0.0.1';
+// Railway and other hosts need 0.0.0.0. Local `npm run server` can stay on loopback.
+const HOST = process.env.HOST || (process.env.PORT ? '0.0.0.0' : '127.0.0.1');
 const JSON_LIMIT = 25 * 1024 * 1024;
 const FILE_LIMIT = 40 * 1024 * 1024;
 const ID = /^[a-zA-Z0-9_-]{4,80}$/;
@@ -503,6 +504,7 @@ function matchRoute(method: string, path: string) {
 const MIME: Record<string, string> = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
@@ -510,8 +512,11 @@ const MIME: Record<string, string> = {
   '.json': 'application/json',
   '.pdf': 'application/pdf',
   '.wasm': 'application/wasm',
+  '.woff': 'font/woff',
   '.woff2': 'font/woff2',
+  '.ttf': 'font/ttf',
   '.map': 'application/json',
+  '.bcmap': 'application/octet-stream',
 };
 
 async function serveStatic(_req: IncomingMessage, res: ServerResponse, url: URL) {
@@ -524,13 +529,25 @@ async function serveStatic(_req: IncomingMessage, res: ServerResponse, url: URL)
     res.end();
     return;
   }
-  if (!existsSync(file) || !extname(file)) file = join(dist, 'index.html');
+  const ext = extname(file).toLowerCase();
+  // Missing asset files must 404. Falling back to index.html breaks pdf.js worker imports (.mjs).
+  if (!existsSync(file)) {
+    if (ext) {
+      send(res, 404, { error: 'Not found' });
+      return;
+    }
+    file = join(dist, 'index.html');
+  }
   if (!existsSync(file)) {
     send(res, 404, { error: 'Not found' });
     return;
   }
   const data = await readFile(file);
-  res.writeHead(200, { 'content-type': MIME[extname(file)] || 'application/octet-stream' });
+  const type = MIME[extname(file).toLowerCase()] || 'application/octet-stream';
+  res.writeHead(200, {
+    'content-type': type,
+    ...(type.startsWith('text/javascript') ? { 'cache-control': 'public, max-age=31536000, immutable' } : {}),
+  });
   res.end(data);
 }
 
